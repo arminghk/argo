@@ -9,6 +9,8 @@ async function bootstrap() {
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE", 
     optionsSuccessStatus: 200, 
   });
+
+
   app.setGlobalPrefix('api')
   app.enableVersioning({
     type: VersioningType.URI,

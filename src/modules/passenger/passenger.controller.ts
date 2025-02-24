@@ -7,8 +7,9 @@ import { SendCodeDto } from './dto/passenger.dto';
 export class PassengerController {
   constructor(private readonly passengerService: PassengerService) {}
 
+
   @Post()
-  create(@Body() SendCodeDto: SendCodeDto) {
+  registerWithMobileNumber(@Body() SendCodeDto: SendCodeDto) {
     return this.passengerService.sendCode(SendCodeDto);
   }
 

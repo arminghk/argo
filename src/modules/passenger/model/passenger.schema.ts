@@ -12,8 +12,8 @@ export class Passenger {
   @Prop({ trim: true, maxlength: 255, default: null })
   last_name: string;
 
-  // @Prop({ default: null })
-  // mobile: string;
+  @Prop({ default: null })
+  mobile: string;
 
   // @Prop({ maxlength: 255, match: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, default: null })
   // email: string;
