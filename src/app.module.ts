@@ -8,6 +8,7 @@ import { databaseConfig } from './database/database.config';
 import mongoose from 'mongoose';
 import { ThrottlerModule,ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { DriverModule } from './modules/driver/driver.module';
 
 
 
@@ -28,6 +29,7 @@ import { APP_GUARD } from '@nestjs/core';
     }]),
     CustomConfigModule,
     PassengerModule,
+    DriverModule,
   ],
   controllers: [],
   providers: [
