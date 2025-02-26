@@ -1,7 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete ,Req } from '@nestjs/common';
 import { PassengerService } from './../passenger.service';
 import { SendCodeDto,RegisterPassengerDto } from './../dto/passenger.dto';
-
+import { Request } from 'express';
 
 @Controller('passenger')
 export class AuthPassengerController {
@@ -17,6 +17,16 @@ export class AuthPassengerController {
   registerWithMobileNumber(@Body() body: RegisterPassengerDto) {
     return this.passengerService.registerWithMobileNumber(body);
   }
+
+  // @Post('/request-google-auth')
+  // googleAuthLink() {
+  //   return this.passengerService.googleAuthLink();
+  // }
+  // @Get('/oauth')
+  // googleOAuthHandler(@Req() request: Request) {
+  //   return this.passengerService.googleOAuthHandler(request);
+  // }
+  
   
 
 }

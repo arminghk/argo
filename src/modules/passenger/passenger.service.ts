@@ -9,7 +9,7 @@ import { Cache } from 'cache-manager';
 import axios from 'axios';
 import * as jwt from 'jsonwebtoken';
 import { generateUniqueReferralCode } from './../../common/utils/generateUniqueReferralCode'
-
+import { OAuth2Client } from 'google-auth-library';
 @Injectable()
 export class PassengerService {
   constructor(
@@ -158,4 +158,54 @@ export class PassengerService {
   async findPassengerByIdAndUpdate(userId, dto) {
     return await this.passengerModel.findByIdAndUpdate(userId, dto);
   }
+
+  // async googleAuthLink () {
+  //   const redirectURL = process.env.GOOGLE_OAUTH_REDIRECT_URL;
+
+  //   const oAuth2Client = new OAuth2Client(
+  //     process.env.GOOGLE_CLIENT_ID,
+  //     process.env.GOOGLE_CLIENT_SECRET,
+  //     redirectURL
+  //   );
+
+  //   // Generate the url that will be used for the consent dialog.
+  //   const authorizeUrl = oAuth2Client.generateAuthUrl({
+  //     access_type: "offline",
+  //     scope: "https://www.googleapis.com/auth/userinfo.profile  openid ",
+  //     prompt: "consent",
+  //   });
+
+  //   return { url: authorizeUrl };
+  // }
+
+  // async googleOAuthHandler(req)  {
+  //   const code = req.query.code;
+  //   try {
+  //     const redirectURL = process.env.GOOGLE_OAUTH_REDIRECT_URL;
+  //     const oAuth2Client = new OAuth2Client(
+  //       process.env.GOOGLE_CLIENT_ID,
+  //       process.env.GOOGLE_CLIENT_SECRET,
+  //       redirectURL
+  //     );
+  //     const request: any = await oAuth2Client.getToken(code as string);
+  //     await oAuth2Client.setCredentials(request.tokens);
+  //     const user = oAuth2Client.credentials;
+
+  //     if (oAuth2Client.credentials.access_token) {
+  //       await this.getUserData(oAuth2Client.credentials.access_token);
+  //     }
+  //   } catch (err) {
+  //     throw new Error(err)
+  //   }
+
+  //   res.redirect(303, process.env.GOOGLE_CLIENT_REDIRECT_URL + "");
+  // }
+
+  // async getUserData(access_token: string) {
+  //   const response = await fetch(
+  //     `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${access_token}`
+  //   );
+  //   return await response.json();
+  // }
+  
 }
