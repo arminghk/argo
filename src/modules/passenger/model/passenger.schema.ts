@@ -15,112 +15,123 @@ export class Passenger {
   @Prop({ default: null })
   mobile: string;
 
-  // @Prop({ maxlength: 255, match: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, default: null })
-  // email: string;
+  @Prop({
+    type: String,
+    match: [
+      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+      'wrong email format',
+    ],
+    maxlength: 255,
+    default: null,
+  })
+  email: string;
 
-  // @Prop({ type: Date })
-  // birthday: Date;
+  @Prop({ type: Date })
+  birthday: Date;
 
   @Prop({ trim: true })
   referral_code: string;
 
-  // @Prop({ trim: true })
-  // invite_code: string;
+  @Prop({ trim: true })
+  invite_code: string;
 
-  // @Prop({ default: false })
-  // isProfileComplete: boolean;
+  @Prop({ type: Boolean, default: false })
+  account_information: boolean;
 
-  // @Prop({ default: 0 })
+  // @Prop({ type: Number, default: 0 })
   // referral_count: number;
 
-  // @Prop({ enum: ['active', 'deactive'], default: 'active' })
+  // @Prop({ type: String, enum: ['active', 'deactive'], default: 'active' })
   // status: string;
 
-  // @Prop({ maxlength: 255, default: null })
-  // nationalId: string;
+  @Prop({ maxlength: 255, default: null })
+  ID: string;
 
-  // @Prop({ default: 0 })
+  // @Prop({ type: Number, default: 0 })
   // credit: number;
 
-  // @Prop({ default: 0 })
+  // @Prop({ type: Number, default: 0 })
   // deposit_credit: number;
 
-  // @Prop()
-  // invitation_code: string;
+  @Prop({ type: String })
+  invitation_code: string;
 
   // @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Passenger', default: null })
-  // invitedBy: Types.ObjectId | Passenger;
+  // invitedBy: MongooseSchema.Types.ObjectId;
 
-  // @Prop({ type: Date, default: null })
-  // first_trip_date: Date;
+  // @Prop({ type: Number, default: null })
+  // first_trip_date: number;
 
-  // @Prop({ default: false })
-  // receive_order_receipt_email: boolean;
+  // @Prop({ type: String, enum: ['active', 'deactive'], default: 'deactive' })
+  // receive_order_receipt_email: string;
 
-  // @Prop({ default: 0 })
+  // @Prop({ type: Number, default: 0 })
   // income: number;
 
-  // @Prop({ default: false })
-  // deleted: boolean;
+  @Prop({ type: String, enum: ['yes', 'no'], default: 'no' })
+  deleted: string;
 
-  // @Prop({ type: Date, default: null })
-  // lastLoginAt: Date;
+  // @Prop({ type: Number, default: null })
+  // lastLoginAt: number;
 
   // @Prop({ type: Object, maxlength: 255, default: null })
-  // location: any;
+  // location: object;
 
-  // @Prop({ type: Date, default: null })
-  // locationUpdatedAt: Date;
+  // @Prop({ type: Number, default: null })
+  // locationUpdatedAt: number;
 
   // @Prop({
-  //   type: {
-  //     creator_person_id: { type: MongooseSchema.Types.ObjectId, ref: 'users' },
-  //     updater_person_id: { type: MongooseSchema.Types.ObjectId, ref: 'users' },
-  //     remover_person_id: { type: MongooseSchema.Types.ObjectId, ref: 'users' },
-  //     status_change_date: { type: Date },
-  //     deletedAt: { type: Date },
-  //   },
+  //   type: Object,
+  //   default: { model: null, ip: null },
   // })
-  // extraData: {
-  //   creator_person_id: Types.ObjectId | IUser;
-  //   updater_person_id: Types.ObjectId | IUser;
-  //   remover_person_id: Types.ObjectId | IUser;
-  //   status_change_date: Date;
-  //   deletedAt: Date;
+  // phoneData: {
+  //   model: string;
+  //   ip: string;
   // };
 
-  // @Prop({ default: null })
+  // @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'passenger_work_profile' })
+  // work_profile: MongooseSchema.Types.ObjectId;
+
+  // @Prop({ type: MongooseSchema.Types.Mixed, ref: 'users' })
+  // extraData: MongooseSchema.Types.Mixed;
+
+  // @Prop({ type: String, default: null })
   // fcmToken: string;
 
-  // @Prop({
-  //   type: MongooseSchema.Types.ObjectId,
-  //   ref: 'passenger_work_profile',
-  // })
-  // work_profile: Types.ObjectId | IPassengerWorkProfile;
+  // @Prop({ type: Number })
+  // createdAt: number;
+
+  // @Prop({ type: Number })
+  // updatedAt: number;
 
   // @Prop({
-  //   type: {
-  //     display_traffic: { type: Boolean, default: true },
-  //     call_me: { type: Boolean, default: true },
-  //     share_location: { type: Boolean, default: true },
-  //     notifications: {
-  //       type: String,
-  //       enum: ['promotions', 'newFeatures', 'all', 'trip'],
-  //       default: 'all',
-  //     },
-  //     clear_map_cache: { type: Boolean, default: false },
+  //   type: Object,
+  //   default: {
+  //     display_traffic: true,
+  //     call_me: true,
+  //     share_location: true,
+  //     notifications: 'all',
+  //     clear_map_cache: false,
   //   },
   // })
-  // passengerSettings: any;
+  // passengerSettings: {
+  //   display_traffic: boolean;
+  //   call_me: boolean;
+  //   share_location: boolean;
+  //   notifications: string;
+  //   clear_map_cache: boolean;
+  // };
 
-  // @Prop({ default: null })
+  // @Prop({ type: String, default: null })
   // stripeCustomerId: string;
 
-  // @Prop({ default: null })
+  // @Prop({ type: String, default: null })
   // google_token: string;
 
-  // @Prop({ default: null })
+  // @Prop({ type: String, default: null })
   // apple_token: string;
+
+
 }
 
 export const PassengerSchema = SchemaFactory.createForClass(Passenger);
