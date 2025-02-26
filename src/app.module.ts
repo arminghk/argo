@@ -9,6 +9,7 @@ import mongoose from 'mongoose';
 import { ThrottlerModule,ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { DriverModule } from './modules/driver/driver.module';
+import { CommonModule } from './modules/common/common.module';
 
 
 
@@ -30,6 +31,7 @@ import { DriverModule } from './modules/driver/driver.module';
     CustomConfigModule,
     PassengerModule,
     DriverModule,
+    CommonModule,
   ],
   controllers: [],
   providers: [
