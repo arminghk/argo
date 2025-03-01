@@ -1,4 +1,5 @@
-import { IsString, Matches, Length,IsOptional,IsBoolean  } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsString, Matches, Length,IsOptional,IsBoolean, IsNumber, IsDate, ValidateNested  } from 'class-validator';
 
 export class SendCodeDto {
   @IsString()
@@ -51,4 +52,88 @@ export class RegisterDriverDto {
   @IsOptional()
   @IsString()
   passenger_id
+}
+
+
+export class UpdateDriverProfileDTO{
+  @IsString()
+  first_name: string;
+
+  @IsString()
+  last_name: string;
+
+  @IsString()
+  mobile: string;
+
+  @IsString()
+  referral_code: string;
+
+  @IsString()
+  invite_code: string;
+
+  @IsBoolean()
+  account_information: boolean;
+
+  @IsNumber()
+  id_card_cumber: number;
+
+  @IsString()
+  address: string;
+
+  @IsNumber()
+  post_code: number;
+
+  @IsDate()
+  @Type(() => Date)
+  birthday: Date;
+
+  @IsString()
+  email: string;
+
+  @IsNumber()
+  license_experience_duration: number;
+
+  @IsBoolean()
+  status: boolean;
+
+  @ValidateNested()
+  // @Type(() => DocumentDto)
+  driver_license;
+
+  @IsString()
+  taxi_operation_license: string;
+
+  @IsDate()
+  @Type(() => Date)
+  taxi_operation_expirationDate: Date;
+
+  @ValidateNested()
+  // @Type(() => DocumentDto)
+  id_card;
+
+  @IsDate()
+  @Type(() => Date)
+  id_card_operation_expiration_date: Date;
+
+  @ValidateNested()
+  // @Type(() => DocumentDto)
+  taxi_driver_license;
+
+  @IsDate()
+  @Type(() => Date)
+  taxi_driver_expiration_date: Date;
+
+  @IsString()
+  vehicle_photo: string;
+
+  @IsString()
+  profile_photo: string;
+
+  @IsOptional()
+  @IsString()
+  other_documents?: string;
+
+  @IsOptional()
+  @IsString()
+  taxi_point_certificate?: string;
 }

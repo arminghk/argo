@@ -1,5 +1,5 @@
 import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
-import { RegisterDriverDto, SendCodeDto } from './dto/driver.dto';
+import { RegisterDriverDto, SendCodeDto, UpdateDriverProfileDTO } from './dto/driver.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Driver } from './model/driver.schema';
 import { Model } from 'mongoose';
@@ -202,5 +202,41 @@ export class DriverService {
   //   );
   //   return await response.json();
   // }
+
+  async enterDetails(body:UpdateDriverProfileDTO){
+
+      const user = await this.driverModel.findOne({mobile:body.mobile});
   
+      if (user?.account_information) {
+        return "you cannot enter profile details multiple times"
+      }
+      if (await this.driverModel.findOne({ mobile: body.mobile })) {
+        return "phone number already exist";
+      }
+      if (await this.driverModel.findOne({ email: body.email })) {
+        return "email already exist";
+      }
+      if (body?.referral_code) {
+        const user = await this.checkReferralCode(body.referral_code);
+        if (!user) {
+          return "invalid referral code" 
+        }
+      }
+      body.account_information = true;
+
+      // const updatedUser = await this.driverModel.findOneAndUpdate(body.mobile, body);
+
+      // if (updatedUser) {
+      //   return ResponseHandler.success(
+      //     res,
+      //     updatedUser,
+      //     "driver successfully updated"
+      //   );
+      // }
+      // return  "driver not found"
+
+  
+    
+  }
+
 }
