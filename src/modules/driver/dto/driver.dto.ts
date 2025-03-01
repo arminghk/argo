@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsString, Matches, Length,IsOptional,IsBoolean, IsNumber, IsDate, ValidateNested  } from 'class-validator';
+import { IsString, Matches, Length,IsOptional,IsBoolean, IsNumber, IsDate, ValidateNested, IsArray, IsEnum, IsMongoId  } from 'class-validator';
 
 export class SendCodeDto {
   @IsString()
@@ -136,4 +136,216 @@ export class UpdateDriverProfileDTO{
   @IsOptional()
   @IsString()
   taxi_point_certificate?: string;
+}
+
+export class CarPicturesDto {
+  @IsString()
+  front: string;
+
+  @IsString()
+  back: string;
+
+  @IsString()
+  left: string;
+
+  @IsString()
+  right: string;
+
+  @IsString()
+  inside: string;
+}
+
+export class CreateCarDTO {
+  @IsString()
+  car_brand: string;
+
+  @IsString()
+  car_model: string;
+
+  @IsString()
+  plate: string;
+
+  @IsString()
+  year: string;
+
+  @IsString()
+  color: string;
+
+  @IsString()
+  vin: string;
+
+  @IsString()
+  iban: string;
+
+  @ValidateNested()
+  @Type(() => CarPicturesDto)
+  car_pictures: CarPicturesDto;
+
+  @IsString()
+  taxi_transport_license: string;
+
+  @IsString()
+  vehicle_registration_certificate_front: string;
+
+  @IsOptional()
+  @IsString()
+  vehicle_registration_certificate_back?: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  other_documents?: string[];
+
+  @IsBoolean()
+  is_owner: boolean;
+
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  default?: boolean;
+
+  @IsOptional()
+  @IsEnum(['active', 'deactive'])
+  status?: string;
+
+  @IsOptional()
+  @IsString()
+  ID?: string;
+
+  @IsOptional()
+  @IsString()
+  username?: string;
+
+  @IsOptional()
+  @IsString()
+  password?: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsMongoId({ each: true })
+  drivers?: string[];
+
+  @IsOptional()
+  @IsString()
+  car_phone?: string;
+
+  @IsOptional()
+  @IsString()
+  plaque?: string;
+
+  @IsOptional()
+  @IsString()
+  car_color?: string;
+
+  @IsOptional()
+  @IsString()
+  IBAN?: string;
+
+  @IsOptional()
+  @IsString()
+  chassis_number?: string;
+
+  @IsOptional()
+  @IsString()
+  year_construction?: string;
+
+  @IsOptional()
+  @IsEnum(['myself', 'other'])
+  car_operator?: string;
+
+  @IsOptional()
+  @IsNumber()
+  commission?: number;
+
+  @IsOptional()
+  @IsNumber()
+  score?: number;
+
+  @IsOptional()
+  @IsNumber()
+  average_score?: number;
+
+  @IsOptional()
+  @IsString()
+  rating?: string;
+
+  @IsOptional()
+  @IsNumber()
+  credit?: number;
+
+  @IsOptional()
+  @IsString()
+  car_card_url?: string;
+
+  @IsOptional()
+  @IsString()
+  car_url?: string;
+
+  @IsOptional()
+  @IsString()
+  documents_url?: string;
+
+  @IsOptional()
+  @IsString()
+  location?: string;
+
+  @IsOptional()
+  @IsNumber()
+  locationUpdatedAt?: number;
+
+  @IsOptional()
+  @ValidateNested()
+  // @Type(() => PhoneDataDto) // فرض می‌کنیم که PhoneDataDto در جایی تعریف شده است
+  phoneData
+
+  @IsOptional()
+  @IsString()
+  car_status?: string;
+
+  @IsOptional()
+  @IsEnum(['yes', 'no'])
+  deleted?: string;
+
+  @IsOptional()
+  @IsNumber()
+  lastLoginAt?: number;
+
+  @IsOptional()
+  @IsString()
+  fcmToken?: string;
+
+  @IsOptional()
+  @IsString()
+  extraData?: string;
+
+  @IsOptional()
+  @IsString()
+  sessionid?: string;
+
+  @IsOptional()
+  // @IsEnum(AppLockEnum)
+  app_lock;
+
+  @IsOptional()
+  @IsNumber()
+  baby_seat?: number;
+
+  @IsOptional()
+  @IsNumber()
+  luggage?: number;
+
+  @IsOptional()
+  @IsBoolean()
+  pet?: boolean;
+
+  @IsOptional()
+  @IsNumber()
+  createdAt?: number;
+
+  @IsOptional()
+  @IsNumber()
+  updatedAt?: number;
 }

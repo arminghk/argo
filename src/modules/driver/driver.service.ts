@@ -1,5 +1,5 @@
 import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
-import { RegisterDriverDto, SendCodeDto, UpdateDriverProfileDTO } from './dto/driver.dto';
+import { CreateCarDTO, RegisterDriverDto, SendCodeDto, UpdateDriverProfileDTO } from './dto/driver.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Driver } from './model/driver.schema';
 import { Model } from 'mongoose';
@@ -9,10 +9,14 @@ import axios from 'axios';
 import * as jwt from 'jsonwebtoken';
 import { generateUniqueReferralCode } from './../../common/utils/generateUniqueReferralCode'
 import { OAuth2Client } from 'google-auth-library';
+import { Car } from './model/car.schema';
+import { DriverAccessLog } from './model/driverAccessLog.schema';
 @Injectable()
 export class DriverService {
   constructor(
     @InjectModel(Driver.name) private driverModel: Model<Driver>,
+    @InjectModel(Car.name) private carModel: Model<Car>,
+    @InjectModel(DriverAccessLog.name) private driverAccessLog: Model<DriverAccessLog>,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) { }
 
@@ -239,4 +243,44 @@ export class DriverService {
     
   }
 
+  async createCar(body:CreateCarDTO,req){
+
+      if (await this.carModel.findOne({ plate: body.plate, deleted: 'no' })) {
+         return 'Car.Duplicate_Plaque'
+
+      }
+      if (await this.carModel.findOne({ vin: body.vin, deleted: 'no' })) {
+        return 'car vin already exist'
+      }
+
+      body.ID = await this.gen_id();
+      body.status = 'deactive';
+      body.drivers = req.user.driver;
+
+      const car = await this.carModel.create(body);
+ 
+
+      let result = await this.driverModel.updateOne({ _id: req.user.driver[0]?._id }, { cars_id: car._id });
+      const driver = await this.driverModel.findOne(req.user!._id);
+      let driver_id_array = [...car.driver_id, driver!._id];
+      await this.carModel.findOneAndUpdate(
+        { _id: car._id },
+        { driver_id: driver_id_array },
+        { new: true }
+      );
+      // // Driver Access Log
+      const d_log = {
+        // value to create driver access log
+        car_id: car!._id,
+        driver_id: driver!._id,
+        action: 'add'
+      };
+      await this.driverAccessLog.create(d_log);
+      return 'Car.CREATED_WAITING'
+
+    
+  }
+
 }
+
+
