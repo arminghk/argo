@@ -25,7 +25,8 @@ import {
       const httpContext = context.switchToHttp();
       const request: Request = httpContext.getRequest<Request>();
       const token = this.extractToken(request);
-      request.user = await this.driverService.DriverVerify(token);
+      let {driver }=await this.driverService.DriverVerify(token)
+      request.user =driver;
       return true;
     }
     protected extractToken(request: Request) {

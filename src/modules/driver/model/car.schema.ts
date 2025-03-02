@@ -73,7 +73,7 @@ export class Car {
   @Prop({ type: String, default: null })
   description: string;
 
-  @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'drivers' }] })
+  @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Driver' }] }) 
   drivers: Types.ObjectId[];
 
   @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'services' }] })
@@ -85,7 +85,7 @@ export class Car {
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'users' })
   fleet: Types.ObjectId;
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'drivers' })
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Driver' }) 
   active_driver: Types.ObjectId;
 
   @Prop({ type: String, maxlength: 255, default: null })
@@ -98,7 +98,7 @@ export class Car {
   password: string;
 
   @Prop({
-    type: [{ type: MongooseSchema.Types.ObjectId, ref: 'CarChange' }],
+    type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Driver' }],
     default: [],
   })
   carChanges_id: Types.ObjectId[];

@@ -127,7 +127,7 @@ export class DriverService {
   }
 
   async driverGenToken(driver) {
-    let token = jwt.sign({ _type: "driver" },process.env.JWT_SECRET_KEY as string, {
+    let token = jwt.sign({ _type: "driver" }, process.env.JWT_SECRET_KEY as string, {
       subject: driver!._id + "",
       expiresIn: '365d',
     });
@@ -136,8 +136,7 @@ export class DriverService {
   async DriverVerify(token: string) {
     try {
       let decode = await jwt.verify(token, process.env.JWT_SECRET_KEY as string);
-      console.log('decode----->', decode);
-      let driver = await this.driverModel.find({ _id: decode.sub });
+      let driver = await this.driverModel.findOne({ _id: decode.sub });
       if (!driver) {
         throw new HttpException('Your session has expired', HttpStatus.UNAUTHORIZED);
       }
@@ -207,80 +206,154 @@ export class DriverService {
   //   return await response.json();
   // }
 
-  async enterDetails(body:UpdateDriverProfileDTO){
+  async enterDetails(body: UpdateDriverProfileDTO) {
 
-      const user = await this.driverModel.findOne({mobile:body.mobile});
-  
-      if (user?.account_information) {
-        return "you cannot enter profile details multiple times"
-      }
-      if (await this.driverModel.findOne({ mobile: body.mobile })) {
-        return "phone number already exist";
-      }
-      if (await this.driverModel.findOne({ email: body.email })) {
-        return "email already exist";
-      }
-      if (body?.referral_code) {
-        const user = await this.checkReferralCode(body.referral_code);
-        if (!user) {
-          return "invalid referral code" 
-        }
-      }
-      body.account_information = true;
+    const user = await this.driverModel.findOne({ mobile: body.mobile });
 
-      // const updatedUser = await this.driverModel.findOneAndUpdate(body.mobile, body);
+    if (user?.account_information) {
+      return "you cannot enter profile details multiple times"
+    }
+    if (await this.driverModel.findOne({ mobile: body.mobile })) {
+      return "phone number already exist";
+    }
+    if (await this.driverModel.findOne({ email: body.email })) {
+      return "email already exist";
+    }
+    if (body?.referral_code) {
+      const user = await this.checkReferralCode(body.referral_code);
+      if (!user) {
+        return "invalid referral code"
+      }
+    }
+    body.account_information = true;
 
-      // if (updatedUser) {
-      //   return ResponseHandler.success(
-      //     res,
-      //     updatedUser,
-      //     "driver successfully updated"
-      //   );
-      // }
-      // return  "driver not found"
+    // const updatedUser = await this.driverModel.findOneAndUpdate(body.mobile, body);
 
-  
-    
+    // if (updatedUser) {
+    //   return ResponseHandler.success(
+    //     res,
+    //     updatedUser,
+    //     "driver successfully updated"
+    //   );
+    // }
+    // return  "driver not found"
+
+
+
   }
 
-  async createCar(body:CreateCarDTO,req){
+  async createCar(body: CreateCarDTO, req) {
 
-      if (await this.carModel.findOne({ plate: body.plate, deleted: 'no' })) {
-         return 'Car.Duplicate_Plaque'
+    if (await this.carModel.findOne({ plate: body.plate, deleted: 'no' })) {
+      return 'Car.Duplicate_Plaque'
 
-      }
-      if (await this.carModel.findOne({ vin: body.vin, deleted: 'no' })) {
-        return 'car vin already exist'
-      }
+    }
+    if (await this.carModel.findOne({ vin: body.vin, deleted: 'no' })) {
+      return 'car vin already exist'
+    }
 
-      body.ID = await this.gen_id();
-      body.status = 'deactive';
-      body.drivers = req.user.driver;
+    body.ID = await this.gen_id();
+    body.status = 'deactive';
+    body.drivers = req.user.driver;
 
-      const car = await this.carModel.create(body);
- 
+    const car = await this.carModel.create(body);
 
-      let result = await this.driverModel.updateOne({ _id: req.user.driver[0]?._id }, { cars_id: car._id });
-      const driver = await this.driverModel.findOne(req.user!._id);
-      let driver_id_array = [...car.driver_id, driver!._id];
-      await this.carModel.findOneAndUpdate(
-        { _id: car._id },
-        { driver_id: driver_id_array },
-        { new: true }
-      );
-      // // Driver Access Log
-      const d_log = {
-        // value to create driver access log
-        car_id: car!._id,
-        driver_id: driver!._id,
-        action: 'add'
-      };
-      await this.driverAccessLog.create(d_log);
-      return 'Car.CREATED_WAITING'
 
-    
+    let result = await this.driverModel.updateOne({ _id: req.user.driver[0]?._id }, { cars_id: car._id });
+    const driver = await this.driverModel.findOne(req.user!._id);
+    let driver_id_array = [...car.driver_id, driver!._id];
+    await this.carModel.findOneAndUpdate(
+      { _id: car._id },
+      { driver_id: driver_id_array },
+      { new: true }
+    );
+    // // Driver Access Log
+    const d_log = {
+      // value to create driver access log
+      car_id: car!._id,
+      driver_id: driver!._id,
+      action: 'add'
+    };
+    await this.driverAccessLog.create(d_log);
+    return 'Car.CREATED_WAITING'
+
+
+  }
+  async findMyCars(req) {
+    const currentUser = req.user;
+    const user = await this.driverModel.findById(currentUser.id);
+    if (!user) {
+      return "driver not found"
+    }
+    const cars = await this.carModel.find({ drivers: user._id });
+
+    if (!cars) {
+      return "car not found"
+    }
+
+    return {
+      message: "cars found successfully",
+      cars
+    }
+  }
+
+  async chosePlate(req) {
+    const currentUser = req.user;
+
+    const user = await this.driverModel.findById(currentUser.id);
+    if (!user) {
+      return "driver not found"
+    }
+    const car = await this.carModel.findOne({ drivers: user }, {}, { populate: "drivers" });
+    if (!car) {
+      return "car not found, register new one"
+    }
+    const activeUser = await this.driverModel.findOne({ _id: car.active_driver });
+    if (activeUser?._id.toString() === user._id.toString()) {
+      return "this car already is chosen by you"
+    }
+    if (car.active_driver) {
+      return "this car used by another driver"
+    }
+    const updatedCar = await this.carModel.findByIdAndUpdate(car._id, {
+      active_driver: user._id,
+    });
+
+    return "chose plate successfully done"
+
+
+
+  }
+  async removePlate(req) {
+    const currentUser = req.user;
+
+    const user = await this.driverModel.findById(currentUser.id);
+    if (!user) {
+      return "driver not found"
+    }
+    const car = await this.carModel.findOne({ drivers: user }, {}, { populate: "drivers" });
+    if (!car) {
+      return "car not found, register new one"
+    }
+
+    if (!car.active_driver) {
+      return "this car not used by anyone"
+    }
+
+    const activeUser = await this.driverModel.findOne({ _id: car.active_driver });
+
+    if (activeUser?._id.toString() !== user._id.toString()) {
+      return "this car already is not chosen by you"
+
+    }
+
+    const updatedCar = await this.carModel.findOneAndUpdate(car._id, {
+      active_driver: null,
+    });
+    return "remove chose plate successfully done"
+
+
+
   }
 
 }
-
-

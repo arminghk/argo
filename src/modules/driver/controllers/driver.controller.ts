@@ -21,5 +21,19 @@ export class DriverController {
     return this.driverService.createCar(body, req)
   }
 
+  @Get('/available-cars')
+  findMyCars(@Request() req: Request) {
+    return this.driverService.findMyCars(req)
+  }
+  @Get('/chose-plate')
+  chosePlate(@Request() req: Request) {
+    return this.driverService.chosePlate(req)
+  }
+  @Get('/remove-plate')
+  removePlate(@Request() req: Request) {
+    return this.driverService.removePlate(req)
+  }
+
+
 
 }
