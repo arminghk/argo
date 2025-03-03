@@ -10,6 +10,7 @@ import { ThrottlerModule,ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { DriverModule } from './modules/driver/driver.module';
 import { CommonModule } from './modules/common/common.module';
+import { PortalModule } from './modules/portal/portal.module';
 
 
 
@@ -32,6 +33,7 @@ import { CommonModule } from './modules/common/common.module';
     PassengerModule,
     DriverModule,
     CommonModule,
+    PortalModule,
   ],
   controllers: [],
   providers: [
