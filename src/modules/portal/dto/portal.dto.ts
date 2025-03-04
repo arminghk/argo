@@ -7,6 +7,11 @@ export class registerNewUserDTO {
   @IsString()
   password: string;
 
+  @IsString()
+  email: string;
+  
+  @IsString()
+  ID: string;
 
 }
 export class loginUserDTO {

@@ -11,6 +11,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { DriverModule } from './modules/driver/driver.module';
 import { CommonModule } from './modules/common/common.module';
 import { PortalModule } from './modules/portal/portal.module';
+import { FleetModule } from './modules/fleet/fleet.module';
 
 
 
@@ -34,6 +35,7 @@ import { PortalModule } from './modules/portal/portal.module';
     DriverModule,
     CommonModule,
     PortalModule,
+    FleetModule,
   ],
   controllers: [],
   providers: [
