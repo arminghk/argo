@@ -11,7 +11,7 @@ import {
   import {Reflector} from "@nestjs/core";
   
   @Injectable()
-  export class PortalUserAuthGuard implements CanActivate {
+  export class PortalAuthGuard implements CanActivate {
     constructor(
       private portalAuthService: PortalAuthService,
       private reflector: Reflector

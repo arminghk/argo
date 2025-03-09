@@ -82,4 +82,37 @@ export class PortalAuthService {
     }
   }
 
+  async listUser(req){
+      const vfw: any = req.query;
+      let users;
+      let where: Record<string, any> = {};;
+      if (vfw?.filter?.where) {
+        const filter = vfw.filter.where;
+        if (filter.mobile)
+          where.mobile = { $regex: filter.mobile } as unknown as string;
+        if (filter.first_name)
+          where.first_name = {
+            $regex: ".*" + filter.first_name + ".*",
+            $options: "i",
+          } as unknown as string;
+        if (filter.last_name)
+          where.last_name = {
+            $regex: ".*" + filter.last_name + ".*",
+            $options: "i",
+          } as unknown as string;
+        if (filter.role) where.role = filter.role;
+      }
+      const option = {
+        skip: (vfw.page - 1) * vfw.limit,
+        limit: vfw.limit,
+      };
+
+      users = await this.portalUserModel.findOne(where, null, option);
+      return {
+        message:  "users fetched successfully",
+        users
+      }
+  
+    }  
+
 }
