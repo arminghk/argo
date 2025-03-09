@@ -12,9 +12,9 @@ export class PortalAuthController {
     return this.portalAuthService.registerNewUser(body);
   }
 
-  // @Post('/login')
-  // login(@Body() body: loginUserDTO) {
-  //   return this.portalAuthService.login(body);
-  // }
+  @Post('/login')
+  login(@Body() body: loginUserDTO) {
+    return this.portalAuthService.login(body);
+  }
 
 }

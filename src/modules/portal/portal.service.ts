@@ -47,92 +47,22 @@ export class PortalAuthService {
   async login(body) {
     const user = await this.portalUserModel.findOne({ username: body.username });
     const fleet = await this.fleetModel.findOne({ username: body.username });
-    if (!user && !fleet) {
-      return  "User doesn't exists";
+    if (!user) {
+      return "User doesn't exists"
     }
-  
-    if (user) {
-      if (user.status === UserStatus[1]) {
-        return 'CRUD.DeActive_User'
 
-      }
-      const isMatch = await helpers.Compare(body.password, user.password);
-      if (!isMatch) {
-        return 'Incorrect password or username'
-      }
-      const token = await AuthHandler.UserGen(user);
-      let auther = await rbac();
-      // if (req.limiter) {
-      //   req.limiter.delete(req.body.username);
-      //   req.limiter.delete(req.ip);
-      // }
-
-      const permissions = await RoleController._formatPermissions(
-        await auther.GetEnforcer().getImplicitPermissionsForUser(user._id + ''),
-       ' res.t'
-      );
-
-      // await createLogReport({
-      //   user_id: user,
-      //   time: Date.now(),
-      //   type: LogReportType.LOGIN
-      // });
-      user.password = '';
-      return {
-        user,
-        token,
-        // permissions,
-        // roles: await auther.GetEnforcer().getImplicitRolesForUser(user._id + '')
-      }
-
-
+    const isMatch = await helpers.Compare(body.password, user.password);
+    if (!isMatch) {
+      return  "Incorrect password or username"
+      
     }
-    // else if (fleet) {
-    //   if (fleet.status === UserStatus[1]) {
-    //     return ResponseHandler.customError(
-    //       res,
-    //       res.t('CRUD.DeActive_User'),
-    //       400
-    //     );
-    //   }
-    //   const isMatch = await helpers.Compare(body.password, fleet.password);
-    //   if (!isMatch) {
-    //     return ResponseHandler.customError(res, 'Incorrect password', 401);
-    //   }
-    //   // TODO: add login logic here
-    //   const { token } = await AuthHandler.FleetGen(fleet);
-    //   let auther = await rbac();
-    //   // if (req.limiter) {
-    //   //   req.limiter.delete(req.body.username);
-    //   //   req.limiter.delete(req.ip);
-    //   // }
+    const token = await AuthHandler.UserGen(user);
+    return { 
+      user, 
+      token: { access_token: token.token } 
+    }
 
-    //   const permissions = await RoleController._formatPermissions(
-    //     await auther
-    //       .GetEnforcer()
-    //       .getImplicitPermissionsForUser(fleet._id + ''),
-    //     res.t
-    //   );
 
-    //   await createLogReport({
-    //     user_id: fleet as any,
-    //     time: Date.now(),
-    //     type: LogReportType.LOGIN
-    //   });
-    //   fleet.password = '';
-    //   return ResponseHandler.success(
-    //     res,
-    //     {
-    //       fleet,
-    //       token,
-    //       permissions,
-    //       roles: await auther
-    //         .GetEnforcer()
-    //         .getImplicitRolesForUser(fleet._id + '')
-    //     },
-    //     res.t('CRUD.Success')
-    //   );
-    // }
   }
 
   async portalUserVerify(token: string) {
