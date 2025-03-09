@@ -57,16 +57,19 @@ export class Fleet {
 
   @Prop({
     type: String,
-    enum: FleetStatusEnum,
-    default: FleetStatusEnum.inactive,
+    // enum: FleetStatusEnum,
+    // default: FleetStatusEnum.inactive,
   })
   status: string;
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'users', required: true })
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'users', })
   fleet_owner: Types.ObjectId;
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'drivers', default: null })
   drivers: Types.ObjectId[];
+
+  @Prop({ type: String})
+  role: string;
 
   @Prop({ type: Number, default: Date.now() })
   createdAt: number;

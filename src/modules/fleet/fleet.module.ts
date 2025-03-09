@@ -3,6 +3,7 @@ import { FleetService } from './fleet.services';
 import { FleetController } from './controllers/fleet.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Fleet, FleetSchema } from './model/fleet.schema';
+import { FleetAuthController } from './controllers/fleetAuth.controller';
 
 @Module({
  imports: [
@@ -10,7 +11,8 @@ import { Fleet, FleetSchema } from './model/fleet.schema';
       { name: Fleet.name, schema: FleetSchema }
     ]),
   ],
-  controllers: [FleetController],
+  controllers: [FleetController,FleetAuthController],
   providers: [FleetService],
+  exports: [MongooseModule] 
 })
 export class FleetModule {}

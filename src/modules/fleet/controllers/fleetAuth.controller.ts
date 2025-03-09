@@ -3,7 +3,7 @@ import { FleetService } from '../fleet.services';
 
 
 @Controller('fleet')
-export class FleetController {
+export class FleetAuthController {
   constructor(private readonly fleetService: FleetService) {}
 
   @Post('/register')
